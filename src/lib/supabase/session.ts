@@ -5,6 +5,8 @@ import { NextResponse, type NextRequest } from "next/server";
 const PUBLIC_PATHS = ["/login", "/signup", "/forgot-password", "/auth"];
 
 function isPublicPath(pathname: string) {
+  // API routes use their own auth (API keys, cron secret) — never redirect them.
+  if (pathname.startsWith("/api/")) return true;
   return PUBLIC_PATHS.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`),
   );
