@@ -5,8 +5,16 @@ import { redirect } from "next/navigation";
 import { createHabitSchema, updateHabitSchema } from "@/lib/validations/habits";
 import { createHabit, updateHabit, deleteHabit, logHabit, deleteHabitLog } from "@/lib/data/habits";
 import { getAuthUser } from "./get-user";
+import { getProfile } from "@/lib/data/settings";
 import type { ActionResult } from "@/lib/types";
 import type { Habit, HabitLog } from "@/lib/data/habits";
+
+/** Returns today's date (YYYY-MM-DD) in the user's stored timezone. */
+async function getUserToday(userId: string): Promise<string> {
+  const profile = await getProfile(userId);
+  const tz = profile?.timezone ?? "Asia/Ho_Chi_Minh";
+  return new Date().toLocaleDateString("en-CA", { timeZone: tz });
+}
 
 export async function createHabitAction(
   _prev: ActionResult<Habit> | null,
@@ -63,7 +71,8 @@ export async function deleteHabitAction(habitId: string): Promise<void> {
 export async function logHabitAction(habitId: string, value = 1): Promise<ActionResult<HabitLog>> {
   try {
     const { userId } = await getAuthUser();
-    const log = await logHabit(userId, habitId, { value });
+    const logDate = await getUserToday(userId);
+    const log = await logHabit(userId, habitId, { value, log_date: logDate });
     revalidatePath("/habits");
     revalidatePath("/dashboard");
     return { ok: true, data: log };
@@ -75,7 +84,8 @@ export async function logHabitAction(habitId: string, value = 1): Promise<Action
 export async function unlogHabitAction(habitId: string): Promise<ActionResult> {
   try {
     const { userId } = await getAuthUser();
-    await deleteHabitLog(userId, habitId);
+    const logDate = await getUserToday(userId);
+    await deleteHabitLog(userId, habitId, logDate);
     revalidatePath("/habits");
     revalidatePath("/dashboard");
     return { ok: true, data: undefined };

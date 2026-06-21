@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { Trophy } from "lucide-react";
+import { Circle, Trophy } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { logHabitAction, unlogHabitAction } from "@/lib/actions/habits";
@@ -42,7 +42,7 @@ export function HabitRow({ habit, currentStreak = 0, onOptimisticToggle }: Habit
         className="shrink-0 text-2xl leading-none transition-transform active:scale-90 select-none"
         title={habit.today_done ? "Undo" : "Mark done"}
       >
-        {habit.today_done ? "🔥" : "⬜"}
+        {habit.today_done ? "🔥" : <Circle className="size-5" />}
       </button>
 
       <div className="flex-1 min-w-0">

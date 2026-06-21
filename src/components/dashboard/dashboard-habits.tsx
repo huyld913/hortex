@@ -5,6 +5,7 @@ import Link from "next/link";
 import { logHabitAction, unlogHabitAction } from "@/lib/actions/habits";
 import { cn } from "@/lib/utils";
 import type { Habit } from "@/lib/data/habits";
+import { Circle } from "lucide-react";
 
 interface DashboardHabitsProps {
   habits: Habit[];
@@ -66,7 +67,7 @@ function HabitTick({
         className="shrink-0 text-xl leading-none transition-transform active:scale-90"
         title={habit.today_done ? "Undo" : "Mark done"}
       >
-        {habit.today_done ? "🔥" : "⬜"}
+        {habit.today_done ? "🔥" : <Circle className="size-5" />}
       </button>
 
       <Link href={`/habits/${habit.id}`} className="flex-1 truncate hover:underline">
