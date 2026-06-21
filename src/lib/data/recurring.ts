@@ -1,14 +1,9 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-export type RecurringRule = "daily" | "weekdays" | "weekly" | "monthly";
-
-export const RECURRING_RULE_LABELS: Record<RecurringRule, string> = {
-  daily: "Daily",
-  weekdays: "Weekdays (Mon–Fri)",
-  weekly: "Weekly",
-  monthly: "Monthly",
-};
+// RecurringRule type and RECURRING_RULE_LABELS live in lib/types.ts
+// so Client Components can import them without hitting server-only.
+import type { RecurringRule } from "@/lib/types";
 
 /** Advance a due_date string (YYYY-MM-DD) to the next occurrence. */
 export function nextDueDate(currentDue: string, rule: RecurringRule): string {

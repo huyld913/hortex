@@ -25,6 +25,13 @@ export interface Project {
 
 export type RecurringRule = "daily" | "weekdays" | "weekly" | "monthly";
 
+export const RECURRING_RULE_LABELS: Record<RecurringRule, string> = {
+  daily: "Daily",
+  weekdays: "Weekdays (Mon–Fri)",
+  weekly: "Weekly",
+  monthly: "Monthly",
+};
+
 export interface Task {
   id: string;
   user_id: string;

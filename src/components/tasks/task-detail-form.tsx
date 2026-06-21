@@ -16,7 +16,7 @@ import { updateTaskAction, deleteTaskAction } from "@/lib/actions/tasks";
 import { QuickAddTask } from "./quick-add-task";
 import { TaskRow } from "./task-row";
 import type { Task, RecurringRule } from "@/lib/types";
-import { RECURRING_RULE_LABELS } from "@/lib/data/recurring";
+import { RECURRING_RULE_LABELS } from "@/lib/types";
 
 const STATUS_OPTIONS = [
   { value: "todo", label: "To Do" },
