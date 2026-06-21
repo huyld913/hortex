@@ -52,7 +52,7 @@ export async function getTask(
 
   const { data, error } = await supabase
     .from("tasks")
-    .select(`*, project:projects(id, name, color), subtasks:tasks(*)`)
+    .select(`*, project:projects(id, name, color), subtasks:tasks!parent_task_id(*)`)
     .eq("id", taskId)
     .eq("user_id", userId)
     .single();
