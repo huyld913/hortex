@@ -1,4 +1,4 @@
-# Cortex — Agent Operating Rules
+# Hortex — Agent Operating Rules
 
 > Read this first, every session. It keeps every agent session consistent.
 > Details live in `@docs/conventions.md` (how to write code) and `@docs/architecture.md` (why it's shaped this way).

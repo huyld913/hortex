@@ -1,10 +1,10 @@
-# Cortex — Architecture
+# Hortex — Architecture
 
 The *why* behind the structure. For day-to-day code rules see `conventions.md`. Locked decisions live in `STATUS.md` → "Architecture".
 
 ## Two doors, one brain
 
-Cortex is both a web app **and** a programmatic API for external AI agents/automations. Both need the same business logic (create a task, build the summary). We avoid duplicating that logic by putting it in one place — the **`data/` layer** — and giving each caller a thin wrapper.
+Hortex is both a web app **and** a programmatic API for external AI agents/automations. Both need the same business logic (create a task, build the summary). We avoid duplicating that logic by putting it in one place — the **`data/` layer** — and giving each caller a thin wrapper.
 
 ```
                  ┌─────────────────────────┐

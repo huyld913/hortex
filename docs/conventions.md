@@ -1,4 +1,4 @@
-# Cortex — Code Conventions
+# Hortex — Code Conventions
 
 How to write code so every session looks like one author wrote it. For the *why* behind the layering, see `architecture.md`.
 
@@ -30,7 +30,7 @@ src/
     actions/               # Server Actions (web): tasks.ts, auth.ts — "use server"
     validations/           # zod schemas (shared by actions + api)
     utils.ts
-  middleware.ts            # protects (app)/*
+  proxy.ts                 # Next 16 "proxy" convention — refreshes session + guards routes
 ```
 
 ## Naming

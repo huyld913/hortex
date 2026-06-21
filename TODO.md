@@ -1,14 +1,14 @@
-# Cortex App — TODO
+# Hortex — TODO
 
 Priority: **P0** = blocks v1 ship · **P1** = needed for a good v1 · **P2** = v2/later.
 
 ## P0 — Foundation
-- [ ] Scaffold Next.js (App Router, TS) in `cortex-app/` with Tailwind + shadcn/ui.
-- [ ] Add `@supabase/ssr` + `@supabase/supabase-js`; create browser + server Supabase clients.
-- [ ] `.env.local`: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (publishable), `SUPABASE_SECRET_KEY` (server-only).
-- [ ] Confirm Supabase schema is applied (run `001_initial_schema.sql` if not).
-- [ ] Auth: login, signup, forgot-password pages + middleware protecting `/app/*`.
-- [ ] App shell: sidebar nav, theme toggle (system default), Linear-like layout.
+- [x] Scaffold Next.js (App Router, TS) in `cortex-app/` with Tailwind + shadcn/ui. _(Next 16.2.9, React 19, Tailwind v4, pnpm via Corepack, shadcn Radix+Nova.)_
+- [x] Add `@supabase/ssr` + `@supabase/supabase-js`; browser/server/admin clients in `src/lib/supabase/`.
+- [x] `.env.local` + `.env.example` created. ⚠️ **Keys still empty — paste publishable + secret keys before auth works.**
+- [ ] Confirm Supabase schema is applied (run `001_initial_schema.sql` if not). **(Needs you, in the SQL Editor.)**
+- [x] Auth: login, signup, forgot-password pages + `proxy.ts` (Next 16 convention) protecting all non-public routes. Email-confirm callback at `/auth/confirm`.
+- [x] App shell: sidebar nav, theme toggle (system default), Linear-like layout.
 
 ## P1 — Tasks (core)
 - [ ] Task data access (server): list with filters, get+subtasks, create, update, delete.

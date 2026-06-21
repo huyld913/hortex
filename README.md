@@ -1,8 +1,8 @@
-# Cortex
+# Hortex
 
 A personal productivity platform — tasks, projects, and habits — **with an AI-agent API gateway as a first-class feature**. It starts as a personal app and is built to grow into a multi-tenant SaaS.
 
-Cortex has two doors into the same logic:
+Hortex has two doors into the same logic:
 
 - **Web app** — what you use in the browser, built on Next.js Server Actions.
 - **API gateway** (`/api/v1/*`) — a versioned, key-authenticated REST API that external AI agents and automations call to work with your data.
