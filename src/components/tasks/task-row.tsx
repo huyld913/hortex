@@ -92,7 +92,9 @@ export function TaskRow({ task, isSubtask, onOptimisticToggle, onOptimisticDelet
               <Repeat className="size-3" />
             </span>
           )}
-          {task.due_date && <span>{task.due_date}</span>}
+          {task.due_date && (
+            <span>{task.due_date}{task.due_time && ` ${task.due_time}`}</span>
+          )}
           {task.project && (
             <span className="flex items-center gap-1">
               <span

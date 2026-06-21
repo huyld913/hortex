@@ -42,6 +42,7 @@ export interface Task {
   status: TaskStatus;
   priority: TaskPriority;
   due_date: string | null;
+  due_time: string | null; // "HH:MM" format, nullable
   tags: string[];
   sort_order: number;
   recurring_rule: RecurringRule | null;

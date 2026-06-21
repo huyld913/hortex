@@ -35,6 +35,7 @@ const PRIORITY_OPTIONS = [
 interface TaskDetailFormProps {
   task: Task;
   projects: Array<{ id: string; name: string; color: string }>;
+  parentTask?: Task | null;
 }
 
 export function TaskDetailForm({ task, projects }: TaskDetailFormProps) {
@@ -146,6 +147,17 @@ export function TaskDetailForm({ task, projects }: TaskDetailFormProps) {
             type="date"
             defaultValue={task.due_date ?? ""}
             onBlur={(e) => save({ due_date: e.target.value || null })}
+            className="h-8 text-xs"
+          />
+        </div>
+
+        {/* Due time */}
+        <div className="space-y-1">
+          <Label className="text-xs text-muted-foreground">Due time</Label>
+          <Input
+            type="time"
+            defaultValue={task.due_time ?? ""}
+            onBlur={(e) => save({ due_time: e.target.value || null })}
             className="h-8 text-xs"
           />
         </div>

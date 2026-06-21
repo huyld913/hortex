@@ -6,6 +6,7 @@ export const createTaskSchema = z.object({
   status: z.enum(["todo", "in_progress", "done", "cancelled"]).optional(),
   priority: z.enum(["p1", "p2", "p3", "p4"]).optional(),
   due_date: z.string().date().nullable().optional(),
+  due_time: z.string().regex(/^\d{2}:\d{2}$/, "Must be HH:MM").nullable().optional(),
   tags: z.array(z.string().max(50)).max(20).optional(),
   project_id: z.string().uuid().nullable().optional(),
   parent_task_id: z.string().uuid().nullable().optional(),
