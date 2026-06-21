@@ -241,7 +241,7 @@ export function TaskDetailForm({ task, projects }: TaskDetailFormProps) {
         {task.subtasks && task.subtasks.length > 0 && (
           <div className="rounded-lg border bg-card px-2 py-1">
             {task.subtasks.map((sub) => (
-              <TaskRow key={sub.id} task={sub} />
+              <TaskRow key={sub.id} task={sub} isSubtask />
             ))}
           </div>
         )}

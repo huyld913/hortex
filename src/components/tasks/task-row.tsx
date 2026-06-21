@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { Circle, CheckCircle2, Trash2, Repeat } from "lucide-react";
+import { Circle, CheckCircle2, Trash2, Repeat, CornerDownRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toggleTaskCompleteAction, deleteTaskAction } from "@/lib/actions/tasks";
 import type { Task } from "@/lib/types";
@@ -22,11 +22,12 @@ const PRIORITY_COLOR: Record<Task["priority"], string> = {
 
 interface TaskRowProps {
   task: Task;
+  isSubtask?: boolean;
   onOptimisticToggle?: (taskId: string, newStatus: Task["status"]) => void;
   onOptimisticDelete?: (taskId: string) => void;
 }
 
-export function TaskRow({ task, onOptimisticToggle, onOptimisticDelete }: TaskRowProps) {
+export function TaskRow({ task, isSubtask, onOptimisticToggle, onOptimisticDelete }: TaskRowProps) {
   const [isPending, startTransition] = useTransition();
   const isDone = task.status === "done";
 
@@ -47,23 +48,29 @@ export function TaskRow({ task, onOptimisticToggle, onOptimisticDelete }: TaskRo
   return (
     <div
       className={cn(
-        "group flex items-center gap-3 rounded-md px-2 py-2 hover:bg-muted/50 transition-colors",
+        "group flex items-center gap-3 rounded-md px-2 py-2.5 hover:bg-muted/50 transition-colors",
+        isSubtask && "pl-7 border-l-2 border-border/60 ml-2",
         isPending && "opacity-60",
       )}
     >
-      {/* Complete toggle */}
+      {/* Subtask indicator */}
+      {isSubtask && (
+        <CornerDownRight className="size-3.5 shrink-0 text-muted-foreground/50" />
+      )}
+
+      {/* Complete toggle — size-5 for easier tap */}
       <button
         onClick={handleToggle}
         className={cn(
-          "shrink-0 rounded-full transition-colors",
+          "shrink-0 rounded-full transition-colors p-0.5",
           isDone ? "text-green-500" : "text-muted-foreground hover:text-foreground",
         )}
         aria-label={isDone ? "Mark incomplete" : "Mark complete"}
       >
         {isDone ? (
-          <CheckCircle2 className="size-4" />
+          <CheckCircle2 className="size-5" />
         ) : (
-          <Circle className="size-4" />
+          <Circle className="size-5" />
         )}
       </button>
 
@@ -72,7 +79,8 @@ export function TaskRow({ task, onOptimisticToggle, onOptimisticDelete }: TaskRo
         <a
           href={`/tasks/${task.id}`}
           className={cn(
-            "block truncate text-sm leading-5",
+            "block truncate leading-5",
+            isSubtask ? "text-sm text-muted-foreground" : "",
             isDone && "line-through text-muted-foreground",
           )}
         >
@@ -84,9 +92,7 @@ export function TaskRow({ task, onOptimisticToggle, onOptimisticDelete }: TaskRo
               <Repeat className="size-3" />
             </span>
           )}
-          {task.due_date && (
-            <span>{task.due_date}</span>
-          )}
+          {task.due_date && <span>{task.due_date}</span>}
           {task.project && (
             <span className="flex items-center gap-1">
               <span
@@ -99,10 +105,12 @@ export function TaskRow({ task, onOptimisticToggle, onOptimisticDelete }: TaskRo
         </div>
       </div>
 
-      {/* Priority */}
-      <span className={cn("shrink-0 text-xs font-medium", PRIORITY_COLOR[task.priority])}>
-        {PRIORITY_LABEL[task.priority]}
-      </span>
+      {/* Priority — hidden for subtasks to reduce noise */}
+      {!isSubtask && (
+        <span className={cn("shrink-0 text-xs font-medium", PRIORITY_COLOR[task.priority])}>
+          {PRIORITY_LABEL[task.priority]}
+        </span>
+      )}
 
       {/* Delete (hover only) */}
       <button

@@ -14,8 +14,11 @@ export default async function HabitsPage() {
   const habits = await listHabits(user.id);
   const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
   const doneCount = habits.filter((h) => h.today_done).length;
+  const total = habits.length;
+  const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+  const allDone = total > 0 && doneCount === total;
 
-  // Fetch streaks only for challenge habits (avoids N+1 for regular habits)
+  // Fetch streaks for challenge habits
   const challengeHabits = habits.filter((h) => h.frequency === "challenge" && h.challenge_days);
   const streakResults = await Promise.all(
     challengeHabits.map((h) => getHabitStats(user.id, h.id, h.challenge_days ?? 30)),
@@ -29,11 +32,29 @@ export default async function HabitsPage() {
     <div className="space-y-8">
       <div>
         <p className="text-sm text-muted-foreground">{today}</p>
-        <h1 className="text-2xl font-semibold tracking-tight">Habits</h1>
-        {habits.length > 0 && (
-          <p className="mt-1 text-sm text-muted-foreground">
-            {doneCount} of {habits.length} done today
-          </p>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-semibold tracking-tight">Habits</h1>
+          {allDone && total > 0 && <span className="text-2xl">🎉</span>}
+        </div>
+
+        {total > 0 && (
+          <div className="mt-2 space-y-1.5">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">
+                {allDone ? "All done today! 🔥" : `${doneCount} of ${total} done`}
+              </span>
+              <span className="font-medium">{pct}%</span>
+            </div>
+            <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${pct}%`,
+                  backgroundColor: allDone ? "#f97316" : "#6366f1",
+                }}
+              />
+            </div>
+          </div>
         )}
       </div>
 

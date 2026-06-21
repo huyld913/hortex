@@ -3,7 +3,9 @@ import Link from "next/link";
 import { AlertCircle, Clock, Loader2, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getDashboardSummary } from "@/lib/data/dashboard";
+import { listHabits } from "@/lib/data/habits";
 import { QuickAddTask } from "@/components/tasks/quick-add-task";
+import { DashboardHabits } from "@/components/dashboard/dashboard-habits";
 
 export const metadata: Metadata = { title: "Dashboard · Hortex" };
 
@@ -16,13 +18,14 @@ const PRIORITY_DOT: Record<string, string> = {
 
 export default async function DashboardPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { overdue, dueToday, inProgress, recentlyDone, stats } =
-    await getDashboardSummary(user.id);
+  const [{ overdue, dueToday, inProgress, recentlyDone, stats }, habits] =
+    await Promise.all([
+      getDashboardSummary(user.id),
+      listHabits(user.id),
+    ]);
 
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -104,9 +107,12 @@ export default async function DashboardPage() {
             ))}
           </Section>
         )}
+
+        {/* Today's habits */}
+        {habits.length > 0 && <DashboardHabits habits={habits} />}
       </div>
 
-      {overdue.length === 0 && dueToday.length === 0 && inProgress.length === 0 && (
+      {overdue.length === 0 && dueToday.length === 0 && inProgress.length === 0 && habits.length === 0 && (
         <p className="py-12 text-center text-sm text-muted-foreground">
           All clear. Add something to get started.
         </p>
@@ -115,16 +121,8 @@ export default async function DashboardPage() {
   );
 }
 
-function StatCard({
-  icon,
-  label,
-  value,
-  highlight,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: number;
-  highlight?: boolean;
+function StatCard({ icon, label, value, highlight }: {
+  icon: React.ReactNode; label: string; value: number; highlight?: boolean;
 }) {
   return (
     <div className={`rounded-lg border bg-card p-4 ${highlight ? "border-red-200 dark:border-red-900" : ""}`}>
@@ -137,16 +135,8 @@ function StatCard({
   );
 }
 
-function Section({
-  title,
-  count,
-  accent,
-  children,
-}: {
-  title: string;
-  count: number;
-  accent?: string;
-  children: React.ReactNode;
+function Section({ title, count, accent, children }: {
+  title: string; count: number; accent?: string; children: React.ReactNode;
 }) {
   return (
     <div className="space-y-2">
@@ -154,34 +144,22 @@ function Section({
         <h2 className={`text-sm font-semibold ${accent ?? ""}`}>{title}</h2>
         <span className="text-xs text-muted-foreground">{count}</span>
       </div>
-      <div className="rounded-lg border bg-card divide-y divide-border/50">
-        {children}
-      </div>
+      <div className="rounded-lg border bg-card divide-y divide-border/50">{children}</div>
     </div>
   );
 }
 
-function TaskLine({
-  id,
-  title,
-  priority,
-  meta,
-  done,
-}: {
-  id: string;
-  title: string;
-  priority?: string;
-  meta?: string;
-  done?: boolean;
+function TaskLine({ id, title, priority, meta, done }: {
+  id: string; title: string; priority?: string; meta?: string; done?: boolean;
 }) {
   return (
-    <div className="flex items-center gap-3 px-3 py-2">
+    <div className="flex items-center gap-3 px-3 py-2.5">
       {priority && (
-        <span className={`shrink-0 size-1.5 rounded-full ${PRIORITY_DOT[priority] ?? "bg-muted-foreground"}`} />
+        <span className={`shrink-0 size-2 rounded-full ${PRIORITY_DOT[priority] ?? "bg-muted-foreground"}`} />
       )}
       <Link
         href={`/tasks/${id}`}
-        className={`flex-1 truncate text-sm hover:underline ${done ? "line-through text-muted-foreground" : ""}`}
+        className={`flex-1 truncate hover:underline ${done ? "line-through text-muted-foreground" : ""}`}
       >
         {title}
       </Link>
