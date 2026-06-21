@@ -32,20 +32,25 @@ Personal productivity platform (tasks, projects, habits) **with an AI-agent API 
 
 ## Supabase
 - Project URL: `https://ohozymqhgcuhubcstfja.supabase.co`
-- Schema source of truth: `cortex/supabase/migrations/001_initial_schema.sql`
-- ⚠️ Confirm the migration has actually been run in the Supabase SQL Editor before wiring data.
+- Schema source of truth: `supabase/migrations/001_initial_schema.sql` ✓ applied.
 - Web app uses the **publishable** key (`sb_publishable_...`) client + server-with-session; the **secret** key is server-only/admin.
 
 ## Current phase
-**P0 foundation built (2026-06-21).** App scaffolded and building green (`pnpm build` ✓, typecheck + lint ✓).
-Stack as installed: Next 16.2.9 (App Router, Turbopack) · React 19 · Tailwind v4 · shadcn/ui (Radix + Nova preset) · pnpm 11 via Corepack.
-Done: Supabase clients (browser/server/admin), email+password auth (login/signup/forgot-password), `proxy.ts` route guard (Next 16 renamed `middleware`→`proxy`), `/auth/confirm` callback, app shell (sidebar + theme toggle, indigo accent).
+**P1 complete (2026-06-21).** All v1 features implemented. Typecheck + lint pass.
 
-**Blockers before auth works end-to-end (need you):**
-1. Paste real keys into `.env.local` (`NEXT_PUBLIC_SUPABASE_ANON_KEY` = publishable, `SUPABASE_SECRET_KEY` = secret).
-2. Confirm `001_initial_schema.sql` is applied in the Supabase SQL Editor.
+Done in this phase:
+- `supabase/migrations/001_initial_schema.sql` created and applied.
+- Domain types (`Task`, `Project`, `TaskFilters`) in `src/lib/types.ts`.
+- Data layer: `src/lib/data/tasks.ts` (list/get/create/update/delete + listProjects), `src/lib/data/dashboard.ts` (summary queries).
+- Zod validations: `src/lib/validations/tasks.ts`.
+- Server Actions: `src/lib/actions/tasks.ts` (create/update/delete/toggleComplete).
+- Tasks page: List view (inline complete toggle, optimistic updates, filters via URL params, quick-add) + Board view (kanban, dnd-kit drag across columns + within-column reorder) + view toggle.
+- Task detail/edit page (`/tasks/[id]`): inline title/description edit, status/priority/due_date/project dropdowns, subtask list + add.
+- Dashboard: stat cards (overdue/due today/in progress/done today) + section lists + quick-add.
+- AI gateway: `POST /api/v1/tasks`, `POST /api/v1/tasks/bulk`, `GET /api/v1/summary`, `POST /api/v1/log-habit`. SHA-256 API-key auth via `X-API-Key` header.
+- New dep: `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities` (kanban board).
 
-Next step after that: P1 — Tasks data layer + List/Board.
+Next: P2 (Projects screen, Habits, Settings/API-keys UI) — or deploy to Vercel first.
 
 Note: nothing committed yet (commit only when you ask). Nothing committed yet (commit only when you ask).
 
