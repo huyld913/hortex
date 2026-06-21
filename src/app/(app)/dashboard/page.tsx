@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { AlertCircle, Clock, Loader2, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getDashboardSummary } from "@/lib/data/dashboard";
+import { getProfile } from "@/lib/data/settings";
 import { listHabits } from "@/lib/data/habits";
 import { QuickAddTask } from "@/components/tasks/quick-add-task";
 import { DashboardHabits } from "@/components/dashboard/dashboard-habits";
@@ -14,14 +15,18 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 
+  const profile = await getProfile(user.id);
+  const tz = profile?.timezone ?? "Asia/Ho_Chi_Minh";
+
   const [{ overdue, dueToday, inProgress, recentlyDone, stats }, habits] =
     await Promise.all([
-      getDashboardSummary(user.id),
-      listHabits(user.id),
+      getDashboardSummary(user.id, tz),
+      listHabits(user.id, true, tz),
     ]);
 
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long", month: "long", day: "numeric",
+    timeZone: tz,
   });
 
   const hasTasks = overdue.length > 0 || dueToday.length > 0 || inProgress.length > 0;

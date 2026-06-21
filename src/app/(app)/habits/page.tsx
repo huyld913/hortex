@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { listHabits, getHabitStats } from "@/lib/data/habits";
+import { getProfile } from "@/lib/data/settings";
 import { HabitsList } from "@/components/habits/habits-list";
 import { HabitForm } from "@/components/habits/habit-form";
 
@@ -11,8 +12,11 @@ export default async function HabitsPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const habits = await listHabits(user.id);
-  const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+  const profile = await getProfile(user.id);
+  const tz = profile?.timezone ?? "Asia/Ho_Chi_Minh";
+
+  const habits = await listHabits(user.id, true, tz);
+  const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", timeZone: tz });
   const doneCount = habits.filter((h) => h.today_done).length;
   const total = habits.length;
   const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;

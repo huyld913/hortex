@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Task } from "@/lib/types";
 
-// All task slices now include status so the dashboard can inline-toggle completion.
 type DashboardTask = Pick<Task, "id" | "title" | "priority" | "status" | "due_date" | "project_id">;
 
 export interface DashboardSummary {
@@ -19,10 +18,26 @@ export interface DashboardSummary {
 
 const TASK_FIELDS = "id, title, priority, status, due_date, project_id";
 
-export async function getDashboardSummary(userId: string): Promise<DashboardSummary> {
+/**
+ * Returns "today" as YYYY-MM-DD in the given IANA timezone.
+ * Uses `en-CA` locale which always formats as YYYY-MM-DD — no parsing needed.
+ */
+export function todayInTimezone(timezone: string): string {
+  try {
+    return new Date().toLocaleDateString("en-CA", { timeZone: timezone });
+  } catch {
+    // Fall back to UTC if the timezone string is invalid
+    return new Date().toISOString().split("T")[0];
+  }
+}
+
+export async function getDashboardSummary(
+  userId: string,
+  timezone = "Asia/Ho_Chi_Minh",
+): Promise<DashboardSummary> {
   const supabase = await createClient();
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = todayInTimezone(timezone);
   const todayStart = `${today}T00:00:00`;
 
   const [overdueRes, dueTodayRes, inProgressRes, recentDoneRes] = await Promise.all([

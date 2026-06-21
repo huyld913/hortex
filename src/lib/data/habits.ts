@@ -44,7 +44,7 @@ export interface HabitStats {
   logs: HabitLog[];
 }
 
-export async function listHabits(userId: string, activeOnly = true): Promise<Habit[]> {
+export async function listHabits(userId: string, activeOnly = true, timezone = "Asia/Ho_Chi_Minh"): Promise<Habit[]> {
   const supabase = await createClient();
 
   let q = supabase
@@ -60,8 +60,8 @@ export async function listHabits(userId: string, activeOnly = true): Promise<Hab
   if (error) throw new Error(error.message);
   if (!habits?.length) return [];
 
-  // Load today's logs in bulk
-  const today = new Date().toISOString().split("T")[0];
+  // Load today's logs in bulk — use user timezone so "today" is correct
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: timezone });
   const { data: logs } = await supabase
     .from("habit_logs")
     .select("habit_id, value")
