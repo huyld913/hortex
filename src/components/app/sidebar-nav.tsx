@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, CheckSquare } from "lucide-react";
+import { LayoutDashboard, CheckSquare, FolderOpen, Flame, Settings } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/tasks", label: "Tasks", icon: CheckSquare },
+  { href: "/projects", label: "Projects", icon: FolderOpen },
+  { href: "/habits", label: "Habits", icon: Flame },
+  { href: "/settings", label: "Settings", icon: Settings },
 ];
 
 // usePathname requires a Client Component — it's how we highlight the active link.

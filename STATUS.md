@@ -50,7 +50,17 @@ Done in this phase:
 - AI gateway: `POST /api/v1/tasks`, `POST /api/v1/tasks/bulk`, `GET /api/v1/summary`, `POST /api/v1/log-habit`. SHA-256 API-key auth via `X-API-Key` header.
 - New dep: `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities` (kanban board).
 
-Next: P2 (Projects screen, Habits, Settings/API-keys UI) — or deploy to Vercel first.
+**P2 complete (2026-06-21).** Typecheck + lint pass.
+
+Done in this phase:
+- Projects: data layer (`lib/data/projects.ts`), CRUD page (`/projects`), project detail with tasks-by-project (`/projects/[id]`).
+- Settings: profile edit (display name + timezone) + API key management UI with one-time key reveal (`/settings`).
+- Habits: data layer with streak algo ported from old cortex (`lib/data/habits.ts`), list with today's check-in + optimistic toggle, habit detail with 30-day grid + stat cards (`/habits`, `/habits/[id]`).
+- Cmd-K command palette (Ctrl+K / ⌘K) — navigate + quick actions. Mounted app-wide in `(app)/layout.tsx`.
+- Sidebar nav updated: Dashboard, Tasks, Projects, Habits, Settings.
+- New deps: `cmdk` (via shadcn command component).
+
+Next: deploy to Vercel, or continue with remaining P2 items (Recurring tasks, OAuth, Billing, CORS hardening).
 
 Note: nothing committed yet (commit only when you ask). Nothing committed yet (commit only when you ask).
 

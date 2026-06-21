@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/lib/actions/auth";
 import { SidebarNav } from "@/components/app/sidebar-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { CommandPalette } from "@/components/app/command-palette";
 import { Button } from "@/components/ui/button";
 
 export default async function AppLayout({
@@ -51,6 +52,8 @@ export default async function AppLayout({
       <main className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-5xl p-8">{children}</div>
       </main>
+
+      <CommandPalette />
     </div>
   );
 }

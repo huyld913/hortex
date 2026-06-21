@@ -28,10 +28,10 @@ Priority: **P0** = blocks v1 ship · **P1** = needed for a good v1 · **P2** = v
 - [x] Endpoints: `POST /api/v1/tasks`, `POST /api/v1/tasks/bulk`, `GET /api/v1/summary`, `POST /api/v1/log-habit`. Each is a thin wrapper over `src/lib/data/*`.
 
 ## P2 — Later
-- [ ] Projects screen (CRUD + tasks-by-project).
-- [ ] Habits (CRUD, check-in, streak/stats charts) — port streak/longest-streak algo from `cortex/src/modules/habits/routes.ts`.
-- [ ] Settings: API-key management UI + profile/timezone.
-- [ ] Cmd-K command palette + keyboard shortcuts.
+- [x] Projects screen (CRUD + tasks-by-project).
+- [x] Habits (CRUD, check-in, streak/stats charts) — port streak/longest-streak algo from `cortex/src/modules/habits/routes.ts`.
+- [x] Settings: API-key management UI + profile/timezone.
+- [x] Cmd-K command palette + keyboard shortcuts.
 - [ ] Recurring tasks + scheduler.
 - [ ] Billing: Stripe plans, limits, customer portal.
 - [ ] OAuth (Google/GitHub) login.
