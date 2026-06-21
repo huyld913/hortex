@@ -32,15 +32,15 @@ export function TaskRow({ task, isSubtask, onOptimisticToggle, onOptimisticDelet
   const isDone = task.status === "done";
 
   function handleToggle() {
-    onOptimisticToggle?.(task.id, isDone ? "todo" : "done");
     startTransition(async () => {
+      onOptimisticToggle?.(task.id, isDone ? "todo" : "done");
       await toggleTaskCompleteAction(task.id, task.status);
     });
   }
 
   function handleDelete() {
-    onOptimisticDelete?.(task.id);
     startTransition(async () => {
+      onOptimisticDelete?.(task.id);
       await deleteTaskAction(task.id);
     });
   }

@@ -51,8 +51,8 @@ function HabitTick({
 
   function toggle() {
     const next = !habit.today_done;
-    dispatch({ id: habit.id, done: next });
     startTransition(async () => {
+      dispatch({ id: habit.id, done: next });
       if (next) await logHabitAction(habit.id);
       else await unlogHabitAction(habit.id);
     });

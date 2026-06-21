@@ -83,8 +83,8 @@ function TaskToggleRow({
 
   function handleToggle() {
     const next: TaskStatus = isDone ? "todo" : "done";
-    dispatch({ id: task.id, status: next });
     startTransition(async () => {
+      dispatch({ id: task.id, status: next });
       await toggleTaskCompleteAction(task.id, task.status);
     });
   }

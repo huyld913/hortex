@@ -24,8 +24,8 @@ export function HabitRow({ habit, currentStreak = 0, onOptimisticToggle }: Habit
 
   function handleToggle() {
     const newDone = !habit.today_done;
-    onOptimisticToggle?.(habit.id, newDone);
     startTransition(async () => {
+      onOptimisticToggle?.(habit.id, newDone);
       if (newDone) await logHabitAction(habit.id);
       else await unlogHabitAction(habit.id);
     });
