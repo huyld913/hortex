@@ -35,6 +35,11 @@ A pure Q&A / read-only session needs no end-update. No separate changelog — `g
 - **TypeScript:** `strict: true`.
 - **Git:** Conventional Commits (`feat:`, `fix:`, `chore:`, `refactor:`). Small commits per TODO task, straight to `main`. **Only commit when the user asks** — don't auto-commit.
 - **Teaching:** The user is new to React/Next. When using a non-obvious Next.js/React idiom, give a **short, on-point** reason — one or two lines, not a lecture. They'll dig deeper themselves if needed.
+- **English-only project:** Everything written into the project is in English — code, comments, identifiers, docs (`README.md`, `docs/*`, `STATUS.md`, `TODO.md`), commit messages, PR text. No Vietnamese in committed artifacts.
+- **English coaching:** The user is improving their English through this work.
+  - When the user writes a request **in Vietnamese**, first give the natural English phrasing of that request (one line, prefixed `🇬🇧`), then carry it out.
+  - When the user writes **in English**, if there's a grammar/phrasing slip, give one corrected version (prefixed `✏️`) before answering. If it's already correct, say nothing about it.
+  - Keep coaching to one short line — never let it derail the actual task.
 
 ## The two doors into the same logic (read `@docs/architecture.md` for full detail)
 
