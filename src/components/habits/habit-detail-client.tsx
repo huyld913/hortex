@@ -66,12 +66,34 @@ export function HabitDetailClient({ habit, stats }: HabitDetailClientProps) {
         </Button>
       </div>
 
+      {/* Challenge progress bar */}
+      {habit.frequency === "challenge" && habit.challenge_days && (
+        <div className="space-y-1">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-muted-foreground">Challenge progress</span>
+            <span className="font-medium">
+              {stats.current_streak} / {habit.challenge_days} days
+              {stats.current_streak >= habit.challenge_days && " 🏆"}
+            </span>
+          </div>
+          <div className="h-2 overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full rounded-full transition-all"
+              style={{
+                width: `${Math.min(100, Math.round((stats.current_streak / habit.challenge_days) * 100))}%`,
+                backgroundColor: habit.color,
+              }}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Stat cards */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard label="Current streak" value={`${stats.current_streak}d`} />
         <StatCard label="Longest streak" value={`${stats.longest_streak}d`} />
         <StatCard label="Completion" value={`${stats.completion_rate}%`} />
-        <StatCard label="Done / 30d" value={`${stats.completed_days}`} />
+        <StatCard label={habit.frequency === "challenge" ? `Done / ${habit.challenge_days}d` : "Done / 30d"} value={`${stats.completed_days}`} />
       </div>
 
       {/* 30-day grid */}

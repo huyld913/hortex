@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { CheckCircle2, Circle } from "lucide-react";
+import { CheckCircle2, Circle, Trophy } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { logHabitAction, unlogHabitAction } from "@/lib/actions/habits";
@@ -9,11 +9,18 @@ import type { Habit } from "@/lib/data/habits";
 
 interface HabitRowProps {
   habit: Habit;
+  currentStreak?: number;
   onOptimisticToggle?: (habitId: string, done: boolean) => void;
 }
 
-export function HabitRow({ habit, onOptimisticToggle }: HabitRowProps) {
+export function HabitRow({ habit, currentStreak = 0, onOptimisticToggle }: HabitRowProps) {
   const [isPending, startTransition] = useTransition();
+
+  const isChallenge = habit.frequency === "challenge" && habit.challenge_days;
+  const challengeComplete = isChallenge && currentStreak >= (habit.challenge_days ?? 0);
+  const progressPct = isChallenge
+    ? Math.min(100, Math.round((currentStreak / (habit.challenge_days ?? 1)) * 100))
+    : 0;
 
   function handleToggle() {
     const newDone = !habit.today_done;
@@ -43,17 +50,35 @@ export function HabitRow({ habit, onOptimisticToggle }: HabitRowProps) {
         <Link href={`/habits/${habit.id}`} className="truncate text-sm hover:underline">
           {habit.name}
         </Link>
-        {habit.target_value && (
+
+        {isChallenge ? (
+          <div className="mt-1 flex items-center gap-2">
+            {challengeComplete ? (
+              <span className="flex items-center gap-1 text-xs font-medium text-yellow-500">
+                <Trophy className="size-3" /> Completed!
+              </span>
+            ) : (
+              <>
+                <div className="h-1.5 w-24 overflow-hidden rounded-full bg-muted">
+                  <div
+                    className="h-full rounded-full transition-all"
+                    style={{ width: `${progressPct}%`, backgroundColor: habit.color }}
+                  />
+                </div>
+                <span className="text-xs text-muted-foreground">
+                  {currentStreak} / {habit.challenge_days}d
+                </span>
+              </>
+            )}
+          </div>
+        ) : habit.target_value ? (
           <p className="text-xs text-muted-foreground">
             Target: {habit.target_value} {habit.unit}
           </p>
-        )}
+        ) : null}
       </div>
 
-      <span
-        className="shrink-0 size-2 rounded-full"
-        style={{ backgroundColor: habit.color }}
-      />
+      <span className="shrink-0 size-2 rounded-full" style={{ backgroundColor: habit.color }} />
     </div>
   );
 }

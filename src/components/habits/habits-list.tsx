@@ -6,9 +6,10 @@ import type { Habit } from "@/lib/data/habits";
 
 interface HabitsListProps {
   habits: Habit[];
+  streaks?: Record<string, number>; // habitId → current streak (for challenge habits)
 }
 
-export function HabitsList({ habits }: HabitsListProps) {
+export function HabitsList({ habits, streaks = {} }: HabitsListProps) {
   const [optimistic, dispatch] = useOptimistic(
     habits,
     (state: Habit[], action: { habitId: string; done: boolean }) =>
@@ -36,6 +37,7 @@ export function HabitsList({ habits }: HabitsListProps) {
             <HabitRow
               key={h.id}
               habit={h}
+              currentStreak={streaks[h.id] ?? 0}
               onOptimisticToggle={(id, d) => dispatch({ habitId: id, done: d })}
             />
           ))}
@@ -49,6 +51,7 @@ export function HabitsList({ habits }: HabitsListProps) {
               <HabitRow
                 key={h.id}
                 habit={h}
+                currentStreak={streaks[h.id] ?? 0}
                 onOptimisticToggle={(id, d) => dispatch({ habitId: id, done: d })}
               />
             ))}

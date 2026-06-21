@@ -2,17 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { createProjectSchema, updateProjectSchema } from "@/lib/validations/projects";
 import { createProject, updateProject, deleteProject } from "@/lib/data/projects";
+import { getAuthUser } from "./get-user";
 import type { ActionResult, Project } from "@/lib/types";
-
-async function getUserId(): Promise<string> {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error("Unauthenticated");
-  return user.id;
-}
 
 export async function createProjectAction(
   _prev: ActionResult<Project> | null,
@@ -27,7 +20,7 @@ export async function createProjectAction(
     return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid input." };
   }
   try {
-    const userId = await getUserId();
+    const { userId } = await getAuthUser();
     const project = await createProject(userId, parsed.data);
     revalidatePath("/projects");
     return { ok: true, data: project };
@@ -45,7 +38,7 @@ export async function updateProjectAction(
     return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid input." };
   }
   try {
-    const userId = await getUserId();
+    const { userId } = await getAuthUser();
     const project = await updateProject(userId, projectId, parsed.data);
     revalidatePath("/projects");
     revalidatePath(`/projects/${projectId}`);
@@ -56,7 +49,7 @@ export async function updateProjectAction(
 }
 
 export async function deleteProjectAction(projectId: string): Promise<void> {
-  const userId = await getUserId();
+  const { userId } = await getAuthUser();
   await deleteProject(userId, projectId);
   revalidatePath("/projects");
   redirect("/projects");

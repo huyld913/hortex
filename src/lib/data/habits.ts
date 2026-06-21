@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 
-export type HabitFrequency = "daily" | "weekly" | "weekdays" | "custom";
+export type HabitFrequency = "daily" | "weekly" | "weekdays" | "custom" | "challenge";
 
 export interface Habit {
   id: string;
@@ -14,6 +14,7 @@ export interface Habit {
   active: boolean;
   sort_order: number;
   custom_days: number[];
+  challenge_days: number | null;
   created_at: string;
   updated_at: string;
   // joined (list view)
@@ -96,7 +97,7 @@ export async function getHabit(userId: string, habitId: string): Promise<Habit |
 
 export async function createHabit(
   userId: string,
-  input: Pick<Habit, "name"> & Partial<Pick<Habit, "description" | "frequency" | "target_value" | "unit" | "color" | "custom_days">>,
+  input: Pick<Habit, "name"> & Partial<Pick<Habit, "description" | "frequency" | "target_value" | "unit" | "color" | "custom_days" | "challenge_days">>,
 ): Promise<Habit> {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -111,7 +112,7 @@ export async function createHabit(
 export async function updateHabit(
   userId: string,
   habitId: string,
-  patch: Partial<Pick<Habit, "name" | "description" | "frequency" | "target_value" | "unit" | "color" | "active" | "sort_order" | "custom_days">>,
+  patch: Partial<Pick<Habit, "name" | "description" | "frequency" | "target_value" | "unit" | "color" | "active" | "sort_order" | "custom_days" | "challenge_days">>,
 ): Promise<Habit> {
   const supabase = await createClient();
   const { data, error } = await supabase

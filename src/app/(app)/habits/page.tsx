@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
-import { listHabits } from "@/lib/data/habits";
+import { listHabits, getHabitStats } from "@/lib/data/habits";
 import { HabitsList } from "@/components/habits/habits-list";
 import { HabitForm } from "@/components/habits/habit-form";
 
@@ -15,6 +15,16 @@ export default async function HabitsPage() {
   const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
   const doneCount = habits.filter((h) => h.today_done).length;
 
+  // Fetch streaks only for challenge habits (avoids N+1 for regular habits)
+  const challengeHabits = habits.filter((h) => h.frequency === "challenge" && h.challenge_days);
+  const streakResults = await Promise.all(
+    challengeHabits.map((h) => getHabitStats(user.id, h.id, h.challenge_days ?? 30)),
+  );
+  const streaks: Record<string, number> = {};
+  challengeHabits.forEach((h, i) => {
+    streaks[h.id] = streakResults[i]?.current_streak ?? 0;
+  });
+
   return (
     <div className="space-y-8">
       <div>
@@ -27,7 +37,7 @@ export default async function HabitsPage() {
         )}
       </div>
 
-      <HabitsList habits={habits} />
+      <HabitsList habits={habits} streaks={streaks} />
 
       <div className="rounded-lg border bg-card p-4">
         <h2 className="mb-4 text-sm font-semibold">New habit</h2>

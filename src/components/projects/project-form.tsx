@@ -42,9 +42,9 @@ export function ProjectForm({ onSuccess }: ProjectFormProps) {
         <div className="flex gap-2">
           {COLORS.map((c) => (
             <label key={c} className="cursor-pointer">
-              <input type="radio" name="color" value={c} className="sr-only" defaultChecked={c === "#6366f1"} />
+              <input type="radio" name="color" value={c} className="peer sr-only" defaultChecked={c === "#6366f1"} />
               <span
-                className="block size-6 rounded-full ring-offset-2 has-[:checked]:ring-2 has-[:checked]:ring-primary"
+                className="block size-6 rounded-full ring-offset-2 peer-checked:ring-2 peer-checked:ring-primary"
                 style={{ backgroundColor: c }}
               />
             </label>

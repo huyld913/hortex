@@ -13,8 +13,14 @@ export async function GET(request: NextRequest) {
 
   if (token_hash && type) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.verifyOtp({ type, token_hash });
-    if (!error) {
+    const { data, error } = await supabase.auth.verifyOtp({ type, token_hash });
+    if (!error && data.user) {
+      // Ensure the profile row exists — the DB trigger only fires for NEW signups.
+      // Users who signed up before the schema was applied won't have a profile yet.
+      await supabase.from("profiles").upsert(
+        { id: data.user.id, display_name: data.user.email ?? "" },
+        { onConflict: "id", ignoreDuplicates: true },
+      );
       return NextResponse.redirect(new URL(next, request.url));
     }
   }

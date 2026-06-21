@@ -1,23 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
 import { createTaskSchema, updateTaskSchema } from "@/lib/validations/tasks";
-import {
-  createTask,
-  updateTask,
-  deleteTask,
-} from "@/lib/data/tasks";
+import { createTask, updateTask, deleteTask } from "@/lib/data/tasks";
+import { getAuthUser } from "./get-user";
 import type { ActionResult, Task } from "@/lib/types";
-
-async function getUserId(): Promise<string> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Unauthenticated");
-  return user.id;
-}
 
 export async function createTaskAction(
   _prev: ActionResult<Task> | null,
@@ -40,7 +27,7 @@ export async function createTaskAction(
   }
 
   try {
-    const userId = await getUserId();
+    const { userId } = await getAuthUser();
     const task = await createTask(userId, parsed.data);
     revalidatePath("/tasks");
     revalidatePath("/dashboard");
@@ -60,7 +47,7 @@ export async function updateTaskAction(
   }
 
   try {
-    const userId = await getUserId();
+    const { userId } = await getAuthUser();
     const task = await updateTask(userId, taskId, parsed.data);
     revalidatePath("/tasks");
     revalidatePath("/dashboard");
@@ -78,11 +65,9 @@ export async function toggleTaskCompleteAction(
   return updateTaskAction(taskId, { status: newStatus });
 }
 
-export async function deleteTaskAction(
-  taskId: string,
-): Promise<ActionResult> {
+export async function deleteTaskAction(taskId: string): Promise<ActionResult> {
   try {
-    const userId = await getUserId();
+    const { userId } = await getAuthUser();
     await deleteTask(userId, taskId);
     revalidatePath("/tasks");
     revalidatePath("/dashboard");
