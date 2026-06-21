@@ -60,7 +60,20 @@ Done in this phase:
 - Sidebar nav updated: Dashboard, Tasks, Projects, Habits, Settings.
 - New deps: `cmdk` (via shadcn command component).
 
-Next: deploy to Vercel, or continue with remaining P2 items (Recurring tasks, OAuth, Billing, CORS hardening).
+**Recurring tasks complete (2026-06-21).** Typecheck + lint pass.
+
+Done in this phase:
+- Schema: `supabase/migrations/002_recurring_tasks.sql` — adds `recurring_instance_of` column to tasks (⚠️ run in Supabase SQL Editor before testing).
+- `lib/data/recurring.ts` — `generateRecurringInstances(today)`: finds all overdue recurring templates, creates instances, advances template due_date. `nextDueDate(date, rule)` handles daily/weekdays/weekly/monthly.
+- `RecurringRule` type added to `lib/types.ts`; `recurring_rule` field added to Zod validation.
+- Cron route: `GET /api/cron/generate-recurring` (protected by `CRON_SECRET`). `vercel.json` configures daily run at 01:00 UTC.
+- UI: recurrence picker dropdown in task detail form (None/Daily/Weekdays/Weekly/Monthly). Repeat icon on recurring templates in task list. "Generated from recurring template" notice on instances.
+
+Recurrence rules stored as plain strings in `recurring_rule`. Templates have `recurring_rule != null`; generated instances have `recurring_rule = null`, `recurring_instance_of = template_id`.
+
+To use on Vercel: add `CRON_SECRET=<random>` environment variable.
+
+Next: deploy to Vercel, or continue with OAuth / Billing / CORS hardening.
 
 Note: nothing committed yet (commit only when you ask). Nothing committed yet (commit only when you ask).
 

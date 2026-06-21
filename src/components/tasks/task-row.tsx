@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { Circle, CheckCircle2, Trash2 } from "lucide-react";
+import { Circle, CheckCircle2, Trash2, Repeat } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toggleTaskCompleteAction, deleteTaskAction } from "@/lib/actions/tasks";
 import type { Task } from "@/lib/types";
@@ -79,6 +79,11 @@ export function TaskRow({ task, onOptimisticToggle, onOptimisticDelete }: TaskRo
           {task.title}
         </a>
         <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
+          {task.recurring_rule && (
+            <span className="flex items-center gap-0.5" title={`Repeats ${task.recurring_rule}`}>
+              <Repeat className="size-3" />
+            </span>
+          )}
           {task.due_date && (
             <span>{task.due_date}</span>
           )}

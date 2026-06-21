@@ -32,7 +32,7 @@ Priority: **P0** = blocks v1 ship · **P1** = needed for a good v1 · **P2** = v
 - [x] Habits (CRUD, check-in, streak/stats charts) — port streak/longest-streak algo from `cortex/src/modules/habits/routes.ts`.
 - [x] Settings: API-key management UI + profile/timezone.
 - [x] Cmd-K command palette + keyboard shortcuts.
-- [ ] Recurring tasks + scheduler.
+- [x] Recurring tasks + scheduler.
 - [ ] Billing: Stripe plans, limits, customer portal.
 - [ ] OAuth (Google/GitHub) login.
 - [ ] Lock CORS / production hardening.

@@ -2,7 +2,7 @@
 
 import { useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Trash2 } from "lucide-react";
+import { Trash2, Repeat } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,7 +15,8 @@ import {
 import { updateTaskAction, deleteTaskAction } from "@/lib/actions/tasks";
 import { QuickAddTask } from "./quick-add-task";
 import { TaskRow } from "./task-row";
-import type { Task } from "@/lib/types";
+import type { Task, RecurringRule } from "@/lib/types";
+import { RECURRING_RULE_LABELS } from "@/lib/data/recurring";
 
 const STATUS_OPTIONS = [
   { value: "todo", label: "To Do" },
@@ -82,6 +83,14 @@ export function TaskDetailForm({ task, projects }: TaskDetailFormProps) {
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 
+      {/* Recurring instance notice */}
+      {task.recurring_instance_of && (
+        <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <Repeat className="size-3.5" />
+          Generated from a recurring task template.
+        </p>
+      )}
+
       {/* Meta fields */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {/* Status */}
@@ -140,6 +149,46 @@ export function TaskDetailForm({ task, projects }: TaskDetailFormProps) {
             className="h-8 text-xs"
           />
         </div>
+
+        {/* Recurrence */}
+        {!task.recurring_instance_of && (
+          <div className="space-y-1">
+            <Label className="text-xs text-muted-foreground">Repeats</Label>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="w-full justify-start gap-1.5 text-xs">
+                  {task.recurring_rule ? (
+                    <>
+                      <Repeat className="size-3" />
+                      {RECURRING_RULE_LABELS[task.recurring_rule as RecurringRule]}
+                    </>
+                  ) : (
+                    "Never"
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem
+                  onSelect={() => save({ recurring_rule: null })}
+                  className="text-xs"
+                >
+                  Never
+                </DropdownMenuItem>
+                {(Object.entries(RECURRING_RULE_LABELS) as [RecurringRule, string][]).map(
+                  ([value, label]) => (
+                    <DropdownMenuItem
+                      key={value}
+                      onSelect={() => save({ recurring_rule: value })}
+                      className="text-xs"
+                    >
+                      {label}
+                    </DropdownMenuItem>
+                  ),
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )}
 
         {/* Project */}
         <div className="space-y-1">

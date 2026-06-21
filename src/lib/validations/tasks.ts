@@ -9,6 +9,7 @@ export const createTaskSchema = z.object({
   tags: z.array(z.string().max(50)).max(20).optional(),
   project_id: z.string().uuid().nullable().optional(),
   parent_task_id: z.string().uuid().nullable().optional(),
+  recurring_rule: z.enum(["daily", "weekdays", "weekly", "monthly"]).nullable().optional(),
 });
 
 export const updateTaskSchema = createTaskSchema.partial();

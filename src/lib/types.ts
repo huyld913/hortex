@@ -23,6 +23,8 @@ export interface Project {
   updated_at: string;
 }
 
+export type RecurringRule = "daily" | "weekdays" | "weekly" | "monthly";
+
 export interface Task {
   id: string;
   user_id: string;
@@ -35,7 +37,8 @@ export interface Task {
   due_date: string | null;
   tags: string[];
   sort_order: number;
-  recurring_rule: string | null;
+  recurring_rule: RecurringRule | null;
+  recurring_instance_of: string | null;
   created_at: string;
   updated_at: string;
   completed_at: string | null;
